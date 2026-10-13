@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#07130a"><title>Bishop CISD | Chief Day Collector Card</title>
+<style>
+*{box-sizing:border-box}body{margin:0;min-height:100dvh;background:radial-gradient(ellipse at top,#184a26,#070b0b 70%);color:#fff;font:600 15px system-ui,Arial;text-align:center;padding:18px 12px 32px}
+h1{margin:4px 0 5px;color:#f4cf55;font-size:clamp(22px,5vw,34px);text-shadow:0 2px 8px #000}p{margin:0 0 15px;color:#d9e6d9;font-weight:400}
+.stage{perspective:1200px;margin:auto;width:min(88vw,370px);aspect-ratio: 1038/1536;cursor:pointer;touch-action:manipulation}
+.card{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .85s cubic-bezier(.2,.75,.2,1)}
+.card.auto{animation:spin 7s linear infinite}.card.auto.paused{animation-play-state:paused}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;overflow:hidden;border-radius:12px;box-shadow:0 12px 32px #000a;border:2px solid #d9b74a}
+.face img{display:block;width:100%;height:100%;object-fit:fill}.back{transform:rotateY(180deg)}
+.face:after{content:"";pointer-events:none;position:absolute;inset:-40%;opacity:0;background:repeating-linear-gradient(115deg,transparent 0%,#e7fff33b 7%,#ffd86c3d 13%,#6af8ff40 18%,transparent 25%);mix-blend-mode:screen;transform:translateX(-35%) rotate(-8deg);animation:foil 4s linear infinite}
+.holo .face:after{opacity:.7}
+@keyframes spin{from{transform:rotateY(0deg)}to{transform:rotateY(360deg)}}
+@keyframes foil{from{transform:translateX(-40%) rotate(-8deg)}to{transform:translateX(40%) rotate(-8deg)}}
+.controls{max-width:470px;margin:18px auto;display:grid;grid-template-columns:1fr 1fr;gap:9px}
+button{border:1px solid #d6b34b;background:#17281c;color:white;padding:13px 7px;border-radius:10px;font:700 14px system-ui;cursor:pointer}button:active{transform:scale(.98)}
+button.primary{background:linear-gradient(#f7d66c,#ac7a15);color:#111}
+small{display:block;color:#b9c9bd;margin:12px auto;max-width:460px;line-height:1.5;font-weight:400}
+</style></head><body>
+<h1>BISHOP CISD COLLECTOR CARD</h1><p>Chief Day • Police Unit • Interactive Edition</p>
+<div class="stage" id="stage" role="button" tabindex="0" aria-label="Tap to flip collector card"><div class="card holo auto" id="card">
+<div class="face front"><img src="chief-day.jpg" alt="Chief Day card"></div>
+<div class="face back"><img src="police-unit.jpg" alt="Bishop CISD police unit card"></div>
+</div></div>
+<div class="controls">
+<button id="spin" class="primary">⏸ Stop Spinning</button>
+<button id="flip">↻ Flip Card</button>
+<button id="holo">✨ Hologram: ON</button>
+<button id="saveFront">↓ Save Chief Day</button>
+<button id="saveBack">↓ Save Police Unit</button>
+<button id="saveBoth" class="primary">↓ Save Both Cards</button>
+</div>
+<small>Tap the card to flip it when spinning is stopped. On iPhone, use Save to open the image, then press and hold the image and choose “Save to Photos” (or use Share → Save Image).</small>
+<script>
+const card=document.getElementById('card'),spin=document.getElementById('spin'),holo=document.getElementById('holo');
+let spinning=true,flipped=false;
+function stop(){if(spinning){const m=new DOMMatrixReadOnly(getComputedStyle(card).transform);const angle=Math.atan2(m.m13,m.m11)*180/Math.PI;card.classList.remove('auto');card.style.transform=`rotateY(${angle}deg)`;spinning=false;spin.textContent='▶ Start Spinning';}}
+function flip(){stop();flipped=!flipped;card.style.transform=`rotateY(${flipped?180:0}deg)`;}
+document.getElementById('stage').addEventListener('click',flip);
+document.getElementById('stage').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();flip()}});
+document.getElementById('flip').onclick=flip;
+spin.onclick=()=>{if(spinning){stop()}else{card.style.transform='';card.classList.add('auto');spinning=true;spin.textContent='⏸ Stop Spinning'}};
+document.getElementById('holo').onclick=()=>{let on=card.classList.toggle('holo');holo.textContent=`✨ Hologram: ${on?'ON':'OFF'}`};
+function save(file){const a=document.createElement('a');a.href=file;a.download=file;a.target='_blank';document.body.appendChild(a);a.click();a.remove()}
+document.getElementById('saveFront').onclick=()=>save('chief-day.jpg');
+document.getElementById('saveBack').onclick=()=>save('police-unit.jpg');
+document.getElementById('saveBoth').onclick=()=>{save('chief-day.jpg');setTimeout(()=>save('police-unit.jpg'),450)};
+</script></body></html>
